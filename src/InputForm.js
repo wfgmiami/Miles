@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
 class InputForm extends Component{
-	
-
 
 	render(){
 		return (	
@@ -19,7 +17,7 @@ class InputForm extends Component{
 				{ this.props.numDestination > 1 ? <button className="btn btn-default" onClick={ this.props.removeDestination }> Remove Destination</button> : null }
 			</div> 	
 		   <div className="col-xs-6">
-			<button className="btn btn-default">Mileage by State</button>
+			<button className="btn btn-default" onClick={ this.props.generateRoute }>Mileage by State</button>
 		   </div>
 		 </div> 
 			

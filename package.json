@@ -1,13 +1,12 @@
 {
-
   "name": "Miles",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-	"webpack": "./node_modules/webpack/bin/webpack.js",
+    "webpack": "./node_modules/webpack/bin/webpack.js",
     "build": "webpack",
-	"start:dev": "npm run webpack -- -w & DATABASE_URL=postgres://localhost/startdb nodemon --ignore dist/ --ignore src/ server.js"
+    "start:dev": "npm run webpack -- -w & nodemon --ignore dist/ --ignore src/ server.js"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +29,7 @@
     "react-router": "^3.0.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "request": "^2.81.0",
     "sequelize": "^3.30.4",
     "webpack": "^2.4.1"
   }
