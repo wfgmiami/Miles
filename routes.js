@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const decodePoints = require('./db');
 const getRoute = require('request');
+const decodePoints = require('./db').decodePoints;
+const getStateMiles = require('./db').getStateMiles;
 
 router.get('/',(req,res,next)=>{
 	//console.log('hit api route',req.query[0]);
@@ -11,9 +12,15 @@ router.get('/',(req,res,next)=>{
 			decodePoints(body, (err, result) => {
 				if(err){
 					console.log('error return from decodePoints ');
-					response.statusCode(403);
+					res.statusCode(403);
 				}else{
-					console.log('in routes.........', result);
+				//	console.log('in routes.........', result);
+					getStateMiles(result, (err,stateMiles) => {
+						if(!err){
+							console.log('.........in routes stateMiles: ', stateMiles);
+							res.send(stateMiles);
+						}
+					})	
 				}
 			});
 		}else{
