@@ -2,23 +2,23 @@ import React,{ Component } from 'react';
 import axios from 'axios';
 
 class InputBox extends Component{
-    
+
 	constructor(){
-		super();	
-		
+		super();
+
 		this.state = {
 			startDestination: [],
 			nextDestination: []
 		}
 
 		this.autoCompleteInput = this.autoCompleteInput.bind(this);
-	}	
-	
+	}
+
 	autoCompleteInput(){
 		let autocomplete =[];
 		let inputs = document.querySelectorAll('input');
 		let inputCount = document.querySelectorAll('input').length;
-		
+
 		const autocompleteOptions = {
 			types: ['(cities)'],
  		    componentRestrictions: { country: "us" }
@@ -27,36 +27,37 @@ class InputBox extends Component{
 		for(let i = 0; i < inputCount; i++){
 			let googleAutoComplete = new google.maps.places.Autocomplete(inputs[i], autocompleteOptions);
 			autocomplete.push(googleAutoComplete);
-			
+
 			googleAutoComplete.addListener('place_changed', (i) => {
 				if(this.props.markers.length !== this.props.numDestination && this.props.markers.length !== 0){
                  this.props.removeMarker(this.props.numDestination);
-				}	
-								
+				}
+
 	  			const place = googleAutoComplete.getPlace();
 				const address = place.formatted_address;
-				
+
 				if (this.props.markers.length === 0){
 					this.setState({ startDestination: address })
 				}else{
 					this.setState({ nextDestination: address })
 				}
-						 
-	
-					
 
-				if(this.state.startDestination.length && this.state.nextDestination.length){	
-					
+
+
+
+				if(this.state.startDestination.length && this.state.nextDestination.length){
+
 				    let url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + this.state.startDestination  + "&destination=" + this.state.nextDestination + "&key=AIzaSyBQ9sJrwFDMV8eMfMsO9gXS75XTNqhq43g"
+						console.log(url)
 					let request = {
 						origin: this.state.startDestination,
 						destination: this.state.nextDestination,
 						travelMode: 'DRIVING'
 					}
 					this.props.renderRoute(request, url);
-				
+
 				}
-				
+
 				const position = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
 				this.props.addMarker({ address, position });
 			})
@@ -73,9 +74,9 @@ class InputBox extends Component{
 	}
 
 	render(){
-		
+
 		return (
-			<div>	
+			<div>
 				Destination { ' ' } { this.props.numDestination }:
 				<input className="form-control" id={ this.props.numDestination } >
 				</input>
