@@ -14,12 +14,12 @@ class MapElement extends Component {
 				center: new google.maps.LatLng(38.87234, -95.96919),
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				zoom: 4
-		
+
 			},
 			mapDiv: {},
 			milesTable: [],
 			request: {},
-			url: {}			
+			url: {}
 		}
 
 		this.renderRoute = this.renderRoute.bind(this);
@@ -31,22 +31,22 @@ class MapElement extends Component {
 
 
 	componentDidMount(){
-		const mapDiv = document.getElementById("mapDiv");	
+		const mapDiv = document.getElementById("mapDiv");
 		const bounds = new google.maps.LatLngBounds();
 		bounds.extend(this.state.mapOptions.center);
 		this.setState( { map: new google.maps.Map(mapDiv, this.state.mapOptions) });
 		this.setState( { bounds } );
 		this.setState( { mapDiv } );
     }
-	
+
 	addMarker({ address, position }){
 		this.state.bounds.extend(position);
 		this.state.map.fitBounds(this.state.bounds);
 		let marker = new google.maps.Marker( { position: position } );
 		this.state.markers.push(marker);
-		marker.setMap(this.state.map);		
+		marker.setMap(this.state.map);
 	}
-	
+
 	removeMarker( index ){
 		console.log('this.state.markers:',this.state.markers);
 		console.log('removeMaker(index:)',index);
@@ -74,14 +74,14 @@ class MapElement extends Component {
 				directionDisplay.setMap(map);
 				directionDisplay.setDirections(result);
 			}
-		})     
+		})
 	}
 
 	generateMileage(){
 		let url = this.state.url;
 		axios.get('/api', { params: url })
 		.then( result => {
-              
+
 				this.setState({ milesTable: result.data })
 		})
 	}
@@ -91,8 +91,8 @@ class MapElement extends Component {
 		  <div>
 			<div id="mapDiv" className="col-xs-12" style={{ height: "350px", marginBottom: '20px' }}>
 			</div>
-			<InputComponent renderRoute={ this.renderRoute } markers={ this.state.markers } addMarker={ this.addMarker } removeMarker={ this.removeMarker } milesTable = { this.state.milesTable } generateMileage = { this.generateMileage} generateRoute = { this.generateRoute } />	
-		  </div>		
+			<InputComponent renderRoute={ this.renderRoute } markers={ this.state.markers } addMarker={ this.addMarker } removeMarker={ this.removeMarker } milesTable = { this.state.milesTable } generateMileage = { this.generateMileage} generateRoute = { this.generateRoute } />
+		  </div>
 		)
 	}
 
