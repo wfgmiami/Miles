@@ -8,23 +8,23 @@ router.get('/',(req,res,next)=>{
 
 	getRoute(req.query[0], (error, response, body) => {
 		if(!error && response.statusCode == 200){
-
 			decodePoints(body, (err, result) => {
-				if(err){
-					console.log('error return from decodePoints ');
-					res.statusCode(403);
-				}else{
-				//	console.log('in routes.........', result);
-					getStateMiles(result, (err,stateMiles) => {
+				if(!err){
+					getStateMiles(result, (err, stateMiles) => {
 						if(!err){
-							console.log('.........in routes stateMiles: ', stateMiles);
-							res.send(stateMiles);
+							res.json(stateMiles);
+						}else{
+							console.log('in routes.js error ruturned from getStateMiles')
+							res.statusCode(403);
 						}
-					})	
+					})
+				}else{
+					console.log('in routes.js error ruturned from decodePoints')
+					res.statusCode(403);
 				}
-			});
+			})	
 		}else{
-			console.log('error in getRoute routes.js');
+			console.log('in routes.js error returned from getRoute');
 			res.statusCode(403);
 		}
  	})

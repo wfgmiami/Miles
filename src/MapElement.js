@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import InputComponent from './InputComponent';
+import TaxTable from './TaxTable';
+
 import axios from 'axios';
 
 class MapElement extends Component {
@@ -19,7 +21,8 @@ class MapElement extends Component {
 			mapDiv: {},
 			milesTable: [],
 			request: {},
-			url: {}
+			url: {},
+			totalMiles: []
 		}
 
 		this.renderRoute = this.renderRoute.bind(this);
@@ -48,8 +51,8 @@ class MapElement extends Component {
 	}
 
 	removeMarker( index ){
-		console.log('this.state.markers:',this.state.markers);
-		console.log('removeMaker(index:)',index);
+	//	console.log('this.state.markers:',this.state.markers);
+	//	console.log('removeMaker(index:)',index);
 		this.state.markers.forEach( (marker, _index) => {
 			if(_index === index )
 				marker.setMap(null);
@@ -60,7 +63,7 @@ class MapElement extends Component {
 	renderRoute(request, url){
 		this.setState( { request: request } )
 		this.setState( { url: url } )
-		console.log(this.state);
+	//	console.log(this.state);
 	}
 
 	generateRoute(){
@@ -81,18 +84,31 @@ class MapElement extends Component {
 		let url = this.state.url;
 		axios.get('/api', { params: url })
 		.then( result => {
+//				console.log('result.data from /api', result.data)
+				let stateMiles = [];
+				let totalMiles = result.data.reduce( (memo, obj) => {
+					let endPosition = obj.miles.indexOf('mi');
+					let miles = Number(obj.miles.substring(0, endPosition));
+					stateMiles.push({ state: obj.state, miles: miles });
+					return memo += miles;
+					
+				},0);
 
-				this.setState({ milesTable: result.data })
+				this.setState({ totalMiles: totalMiles.toFixed(2) });	
+				this.setState({ milesTable: stateMiles });
+//				console.log('this.state',this.state);
 		})
 	}
 
 	render(){
 		return (
-		  <div>
+		  <div className="row">
 			<div id="mapDiv" className="col-xs-12" style={{ height: "350px", marginBottom: '20px' }}>
 			</div>
-			<InputComponent renderRoute={ this.renderRoute } markers={ this.state.markers } addMarker={ this.addMarker } removeMarker={ this.removeMarker } milesTable = { this.state.milesTable } generateMileage = { this.generateMileage} generateRoute = { this.generateRoute } />
-		  </div>
+			<InputComponent renderRoute={ this.renderRoute } markers={ this.state.markers } addMarker={ this.addMarker } removeMarker={ this.removeMarker } milesTable = { this.state.milesTable } generateMileage = { this.generateMileage} generateRoute = { this.generateRoute } totalMiles = { this.state.totalMiles }/>
+			<TaxTable milesTable = { this.state.milesTable } />	
+   	      </div>
+
 		)
 	}
 

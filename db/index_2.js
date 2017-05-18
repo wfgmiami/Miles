@@ -17,7 +17,7 @@ const connect = (cb) => {
 }
 
 
-const decodePoints = (body, cb) => {
+const decodePoints = (body) => {
 
  	let result = JSON.parse(body);
  	let startState = result.routes[0].legs[0].start_address.split(", ")[1].trim();
@@ -28,9 +28,7 @@ const decodePoints = (body, cb) => {
     let endPoint = result.routes[0].legs[0].end_location;
 	let checkPoint = [];
 	let stateMiles = [];
-
-	connect( (err, client) => {
-		if(err) cb(err);
+	let coordinates = [];
 
 		for( let step = 0; step < numSteps; step++ ){
 			let str = legs.steps[step].polyline.points
@@ -42,8 +40,8 @@ const decodePoints = (body, cb) => {
 				byte = null,
 				latitude_change,
 				longitude_change,
-				factor = Math.pow(10, 5),
-				coordinates = []
+				factor = Math.pow(10, 5)
+				
 
 			while (index < str.length){
 				byte = null;
@@ -70,66 +68,22 @@ const decodePoints = (body, cb) => {
 				lat += latitude_change;
 				lng += longitude_change;
 				coordinates.push({ lat: lat/factor, lng: lng/factor });
-				//checkPoint[step] = { lat: lat/factor, lng: lng/factor };
 				
-			//	if(step === 6){
-			//		console.log('checkPoint', checkPoint[step]);
-			//	}
-/*
-				findState(checkPoint[step], step, (err, state) => {
-					if(!err){
-				//		console.log(state,startState);
-						
-						if( state !== startState){
-						console.log('step,currentState,startState,lat/lng in newState:',step,state,startState,checkPoint[step]);
-						
-						throw new Error('eror');
-						stateMiles.push({ state: startState, startPoint: startPoint, endPoint: checkPoint[step] })
-
-							if(state == endState){
-
-								stateMiles.push({ state: endState, startPoint: checkPoint[step], endPoint: endPoint })
-								//console.log('before cb...stateMiles.', stateMiles)
-								cb(null, stateMiles)
-							}
-
-								startPoint = checkPoint[step];
-								startState = state;
-						}
-					}
-				})
-*/				
 			}
-			coordinates.forEach( coordinate => {
-				findState(coordinate, (err, state) => {
-					if(!err){
-				//		console.log(state,startState);
-						
-						if( state !== startState){
-//						console.log('step,currentState,startState,lat/lng in newState:',step,state,startState, coordinate);
-						
-					//	throw new Error('eror');
-						stateMiles.push({ state: startState, startPoint: startPoint, endPoint: coordinate })
 
-							if(state == endState){
-
-								stateMiles.push({ state: endState, startPoint: coordinate, endPoint: endPoint })
-								//console.log('before cb...stateMiles.', stateMiles)
-								cb(null, stateMiles)
-							}
-
-								startPoint = coordinate;
-								startState = state;
-						}
-					}
-				})
-			})
-			coordinates = [];
-		}
-  })
+		}	
+//  console.log('inside db',coordinates);	
+	return coordinates;
 }
 
+const promiseForPoints = (points, cb) => {
+	connect(
+	points.map( point => {
 
+	})
+
+
+}
 const findState = (coordinates, cb) => {
 	let queryString = `SELECT stusps FROM tl_2009_us_state WHERE ST_CONTAINS(wkb_geometry, ST_GeomFromText('point( ${ coordinates.lng } ${ coordinates.lat })',4269))`;
 
@@ -157,7 +111,7 @@ const getStateMiles = (data, cb) => {
 		let endLng = data[i].endPoint.lng;
 
 		let url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=" + lat + "," + lng + "&destinations=" + endLat + "," + endLng + "&mode=driving&key=AIzaSyBQ9sJrwFDMV8eMfMsO9gXS75XTNqhq43g";
-		//console.log('in getStateMiles url: ',url);
+		console.log('in getStateMiles url: ',url);
 		getDistance(url, i, (error, response, body) => {
 			state = data[i].state;
 

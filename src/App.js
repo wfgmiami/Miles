@@ -16,9 +16,10 @@ class App extends Component {
     const map_key = process.env.MAP_KEY;
 
     return (
-      <div className="container">
+      <div className="container-fluid">
         <div className="well">
-          IFTA MILEAGE BY STATE
+         <h3>INTERNATIONAL FUEL TAX AGREEMENT APP</h3>
+		 <div><i>Helping motor carriers prepare their IFTA tax reporting</i></div>
         </div>
 		<MapElement />
 	 </div>

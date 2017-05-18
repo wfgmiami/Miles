@@ -16,8 +16,8 @@ class InputBox extends Component{
 
 	autoCompleteInput(){
 		let autocomplete =[];
-		let inputs = document.querySelectorAll('input');
-		let inputCount = document.querySelectorAll('input').length;
+		let inputs = document.getElementsByClassName('form-control destin');
+		let inputCount = document.getElementsByClassName('form-control destin').length;
 
 		const autocompleteOptions = {
 			types: ['(cities)'],
@@ -77,8 +77,8 @@ class InputBox extends Component{
 
 		return (
 			<div>
-				Destination { ' ' } { this.props.numDestination }:
-				<input className="form-control" id={ this.props.numDestination } >
+				<b>Destination { this.props.numDestination - 1 ?  this.props.numDestination - 1 : null }</b>
+				<input className="form-control destin" id={ this.props.numDestination } >
 				</input>
 				<br />
 			</div>

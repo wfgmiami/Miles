@@ -8,7 +8,7 @@ class InputComponent extends Component{
 		super();
 
 		this.state = {
-			numChildren: 1
+			numChildren: 1 
 		};
 
 		this.removeDestination = this.removeDestination.bind(this);
@@ -33,7 +33,7 @@ class InputComponent extends Component{
 		}
 
 		return (
-			<InputForm numDestination={ this.state.numChildren } addDestination = { this.addDestination } removeDestination = { this.removeDestination } milesTable = { this.props.milesTable } generateRoute = { this.props.generateRoute } generateMileage = { this.props.generateMileage } >
+			<InputForm numDestination={ this.state.numChildren } addDestination = { this.addDestination } removeDestination = { this.removeDestination } milesTable = { this.props.milesTable } generateRoute = { this.props.generateRoute } generateMileage = { this.props.generateMileage } totalMiles = { this.props.totalMiles } >
 				{ children }
 			</ InputForm>
 		)

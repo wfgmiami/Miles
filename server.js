@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 
 app.use('/vendor', express.static(__dirname + '/node_modules'));
 app.use('/dist', express.static(__dirname + '/dist'));
+app.use('/stylesheets', express.static(__dirname + '/stylesheets'));
 
 app.get('/', (req,res,next) => {
 	res.sendFile(__dirname + '/index.html');
